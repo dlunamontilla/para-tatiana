@@ -41,9 +41,8 @@ function sanitizeText(text) {
  * de conocer el nombre de los campos del formulario. El proceso es 
  * automatizado.
  * 
- * @param {HTMLFormElement} form Coloque su formulario
- * como parámetro de getDataForm para capturar sus datos
- * y devolver un objeto.
+ * @param {HTMLFormElement} form Al formulario que pase como parámetro
+ * se le capturarán los datos de sus campos para guardarlos en un objeto.
  *
  * @return { Object<string, string|number>} Devuelve un
  * objeto con los datos capturados del formulario. Esto lo
