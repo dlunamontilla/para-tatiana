@@ -60,7 +60,6 @@ const guardarCitas = (selectorForm) => {
     };
 };
 
-
 guardarCitas("#citas");
 
 /**
@@ -75,7 +74,13 @@ const pintarDatos = (selectorContainer) => {
     const register = getRegister("citas");
     tableContainer.textContent = "";
 
-    const [table, thead, tbody, colgroup, col] = crearElementos("table", "thead", "tbody", "colgroup", "col");
+    const [table, thead, tbody, colgroup, col] = crearElementos(
+        "table",
+        "thead",
+        "tbody",
+        "colgroup",
+        "col"
+    );
 
     table.classList.add("table");
     thead.classList.add("table__thead");
@@ -87,7 +92,7 @@ const pintarDatos = (selectorContainer) => {
 
     // Cabecera de la tabla
     thead.insertAdjacentHTML(
-        'beforeend',
+        "beforeend",
 
         `<tr>
             <th>Nombre</th>
@@ -102,7 +107,7 @@ const pintarDatos = (selectorContainer) => {
         const { id, nombre, fecha, hora, sintomas } = cita;
 
         tbody.insertAdjacentHTML(
-            'beforeend',
+            "beforeend",
 
             `<tr>
                 <td>${nombre}</td>
@@ -110,7 +115,7 @@ const pintarDatos = (selectorContainer) => {
                 <td>${hora}</td>
                 <td>${sintomas}</td>
                 <td><button data-id="${id}" class="btn btn-danger">Borrar</button></td>
-            <tr>`
+            </tr>`
         );
     });
 
@@ -118,7 +123,7 @@ const pintarDatos = (selectorContainer) => {
     tableContainer.appendChild(table);
 };
 
-pintarDatos("#table-container"); 
+pintarDatos("#table-container");
 
 // Realizar búsqueda de datos:
 formSearch?.addEventListener("submit", function (e) {
@@ -152,28 +157,41 @@ formSearch?.addEventListener("submit", function (e) {
         `
     );
 
-    console.log( filtrado, filtrado.length );
-    console.log( busqueda );
-
     filtrado.length === 0
         ? (tbody.innerHTML = `<tr><td colspan="5">El nombre ${input} no existe</td></tr>`)
         : filtrado.forEach((cita) => {
-            const { nombre, fecha, hora, sintomas } = cita;
+              const { nombre, fecha, hora, sintomas } = cita;
 
-            tbody.insertAdjacentHTML(
-                'beforeend',
+              tbody.insertAdjacentHTML(
+                  "beforeend",
 
-                `<tr>
+                  `<tr>
                     <td>${nombre}</td>
                     <td>${fecha}</td>
                     <td>${hora}</td>
                     <td>${sintomas}</td>
                     <td><button data-id=${cita.id} class="btn btn-danger">Borrar</button></td>
-                </tr>`    
-                );
-        });
+                </tr>`
+              );
+          });
+
     thead.classList.add("table__thead");
     table.classList.add("table");
     busqueda.appendChild(table);
-    console.log( table );
+});
+
+const resultados = document.querySelectorAll(".resultados");
+resultados.forEach((resultado) => {
+    resultado.addEventListener("click", function (e) {
+        const target = e.target;
+        const { id } = target.dataset;
+
+        if (id) {
+            deleteRegister(Number(id), "citas");
+            target.parentNode.parentNode.remove();
+            
+            // Actualizar la vista de registro:
+            pintarDatos("#table-container");
+        }
+    });
 });

@@ -141,8 +141,6 @@ function searchData(inputText, data) {
 
     const findName = new RegExp(`${inputText || "()"}+`, "gi");
 
-    console.log(findName);
-
     return data.filter((object) => {
         for (let property in object) {
             const value = object[property];
@@ -167,7 +165,7 @@ function searchData(inputText, data) {
  */
 function deleteRegister(id, nameRegister) {
     const data = getRegister(nameRegister);
-    const dataFiltered = data.filter(object => object.id !== id);
+    const dataFiltered = data.filter(object => Number(object.id) !== id);
     localStorage.setItem(nameRegister, JSON.stringify(dataFiltered));
 }
 
