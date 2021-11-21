@@ -1,7 +1,10 @@
 // @ts-check
 
 /**
- * 
+ *
+ * Ayuda a evaluar si el elemento pasado como parámetro es un campo
+ * de formulario.
+ *  
  * @param {any} input Evalur si es o no un campo de formulario.
  * 
  * @returns { boolean }
@@ -12,6 +15,8 @@ function isInput(input) {
 
 /**
  *
+ * Ayuda a sanear texto con el que se va a trabajar.
+ * 
  * @param {string|number} text Ingrese un texto para sanearlo.
  *
  * @returns { string } Devuelve un texto saneado y codificado.
@@ -32,6 +37,10 @@ function sanitizeText(text) {
 
 /**
  *
+ * Obtiene los datos del formulario de forma dinámica, sin la necesidad
+ * de conocer el nombre de los campos del formulario. El proceso es 
+ * automatizado.
+ * 
  * @param {HTMLFormElement} form Coloque su formulario
  * como parámetro de getDataForm para capturar sus datos
  * y devolver un objeto.
@@ -69,7 +78,7 @@ function getFormData(form) {
 
 /**
  *
- * Esta función guarda los datos del formulario en localStorge.
+ * Guarda los datos del formulario en localStorge.
  * 
  * @param { string } nameRegister Nombre del registro a
  * guardar en el navegador.
@@ -98,6 +107,8 @@ function saveFormData(nameRegister, dataForm) {
 
 /**
  *
+ * Obtiene los datos de localStorage y los parsea automáticamente.
+ * 
  * @param {string} nameRegister Ingrese el nombre de registro
  * previamente almacenado.
  *
@@ -112,6 +123,8 @@ function getRegister(nameRegister) {
 
 /**
  *
+ * Permite buscar los datos dentro de un array de objetos.
+ * 
  * @param { string } inputText Ingrese un criterio de búsqueda
  * para filtrar los datos.
  *
@@ -141,6 +154,9 @@ function searchData(inputText, data) {
 }
 
 /**
+ * 
+ * Permite eliminar un registro específico en función de su id. El id
+ * del objeto almacenado en localStorage es generado automáticamente.
  * 
  * @param {number} id Debe ingresar el ID del registro para seleccionarlo
  * y eliminarlo.
