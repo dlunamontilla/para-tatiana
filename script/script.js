@@ -4,30 +4,40 @@ import {
     saveFormData,
     getRegister,
     searchData,
-    deleteRegister
+    deleteRegister,
 } from "./register.js";
 
-const form = document.querySelector("form");
-const listarCitas = document.getElementById("listarCitas");
-const citas = [];
 const formSearch = document.getElementById("form-search");
-const busqueda = document.getElementById("busqueda");
-
-console.log(getRegister("citas"));
-
 
 /**
- * 
+ *
+ * @param {Array<string>} string Crea nuevos elementos HTML.
+ *
+ * @returns {Array<HTMLElement>}
+ */
+const crearElementos = (...string) => {
+    /** @type {Array<HTMLElement>} */
+    const elements = [];
+
+    string.forEach((element) => {
+        elements.push(document.createElement(element));
+    });
+
+    return elements;
+};
+
+/**
+ *
  * @param {string} selectorForm Debe seleccionar un formulario
  * mediante un selector.
- * 
+ *
  * @return { void }
  */
 const guardarCitas = (selectorForm) => {
     /** @type {HTMLFormElement} */
     const form = document.querySelector(selectorForm);
 
-    if ( !form ) return;
+    if (!form) return;
 
     form.onsubmit = (e) => {
         e.preventDefault();
@@ -37,73 +47,133 @@ const guardarCitas = (selectorForm) => {
             showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: "Guardar",
-            denyButtonText: 'No guardar',
+            denyButtonText: "No guardar",
         }).then((result) => {
             if (result.isConfirmed) {
-                saveFormData("citas", getFormData(form));                
-                pintarDatos("#listaCitas");
+                saveFormData("citas", getFormData(form));
+                pintarDatos("#tabla-citas");
                 swal.fire("Agenda guardada!", "", "success");
             } else if (result.isDenied) {
                 swal.fire("Changes are not saved", "", "info");
             }
         });
-    }
+    };
 };
+
 
 guardarCitas("#citas");
 
-citas.push(...getRegister("citas"));
-
 /**
- * 
- * @param {string} selector Selector
- * @returns 
+ *
+ * @param {string} selectorContainer Selector
+ * @returns
  */
-const pintarDatos = (selector) => {
-    const listarCitas = document.querySelector(selector);
-    if (!listarCitas) return;
+const pintarDatos = (selectorContainer) => {
+    const tableContainer = document.querySelector(selectorContainer);
+    if (!tableContainer) return;
 
     const register = getRegister("citas");
+    tableContainer.textContent = "";
 
-    register.forEach(cita => {
-        const { nombre, fecha, hora, sintomas } = cita;
-        const registro = `
-        <tr>\n
-            <td>${nombre}</td>\n
-            <td>${fecha}</td>\n
-            <td>${hora}</td>\n
-            <td>${sintomas}</td>\n
-        <tr>\n`;
+    const [table, thead, tbody, colgroup, col] = crearElementos("table", "thead", "tbody", "colgroup", "col");
 
-        listarCitas.insertAdjacentHTML('beforeend', registro);
+    table.classList.add("table");
+    thead.classList.add("table__thead");
+
+    for (let i = 0; i < 5; i++) {
+        const celda = col.cloneNode(false);
+        colgroup.appendChild(celda);
+    }
+
+    // Cabecera de la tabla
+    thead.insertAdjacentHTML(
+        'beforeend',
+
+        `<tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Sintomas</th>
+            <th>Acciones</th>
+        </tr>`
+    );
+
+    register.forEach((cita) => {
+        const { id, nombre, fecha, hora, sintomas } = cita;
+
+        tbody.insertAdjacentHTML(
+            'beforeend',
+
+            `<tr>
+                <td>${nombre}</td>
+                <td>${fecha}</td>
+                <td>${hora}</td>
+                <td>${sintomas}</td>
+                <td><button data-id="${id}" class="btn btn-danger">Borrar</button></td>
+            <tr>`
+        );
     });
+
+    table.append(colgroup, thead, tbody);
+    tableContainer.appendChild(table);
 };
 
-pintarDatos("#listarCitas");
+pintarDatos("#table-container"); 
 
-formSearch?.addEventListener("submit", function(e) {
+// Realizar búsqueda de datos:
+formSearch?.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const data = getRegister("citas");
+    const busqueda = document.querySelector("#busqueda");
     const input = this.elements.namedItem("buscar")?.value || "";
+    if (!(input.length > 0) || !busqueda) return;
+
+    const data = getRegister("citas");
     const filtrado = searchData(input, data);
 
-    console.log( filtrado );
+    guardarCitas("#citas");
 
     busqueda.textContent = "";
 
+    const [table, thead, tbody] = crearElementos("table", "thead", "tbody");
+
+    table.append(thead, tbody);
+
+    thead.insertAdjacentHTML(
+        "beforeend",
+        `
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Síntomas</th>
+            <th>Acciones</th>
+        </tr>
+        `
+    );
+
+    console.log( filtrado, filtrado.length );
+    console.log( busqueda );
+
     filtrado.length === 0
-        ? (busqueda.innerHTML += `<div>El nombre ${input} no existe</div>`)
-        : filtrado.map((cita) => {
+        ? (tbody.innerHTML = `<tr><td colspan="5">El nombre ${input} no existe</td></tr>`)
+        : filtrado.forEach((cita) => {
             const { nombre, fecha, hora, sintomas } = cita;
-            busqueda.innerHTML += `
-            <div>
-                <div>${nombre}</div>
-                <div>${fecha}</div>
-                <div>${hora}</div>
-                <div>${sintomas}
-                <button>Borrar</button>
-            </div>
-            `;
+
+            tbody.insertAdjacentHTML(
+                'beforeend',
+
+                `<tr>
+                    <td>${nombre}</td>
+                    <td>${fecha}</td>
+                    <td>${hora}</td>
+                    <td>${sintomas}</td>
+                    <td><button data-id=${cita.id} class="btn btn-danger">Borrar</button></td>
+                </tr>`    
+                );
         });
+    thead.classList.add("table__thead");
+    table.classList.add("table");
+    busqueda.appendChild(table);
+    console.log( table );
 });

@@ -2,6 +2,11 @@
   --fondo: #130468ec;
 }
 
+hr {
+  border: 0;
+  margin: 20px auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.651);
+}
 body {
   margin: 5%;
   padding: 0;
@@ -36,9 +41,11 @@ header h1{
 
 .resultados {
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgb(207, 209, 252);
   min-height: 40px;
   border-radius: 4px;
+
+  overflow: auto;
 }
 
 .resultados:empty {
@@ -143,4 +150,54 @@ form {
   height: 40px;
   display: flex;
   align-items: center;
+}
+
+.table__thead {
+  background-color: var(--fondo);
+  color: rgba(255, 255, 255, 0.897);
+}
+
+.table {
+  padding: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.table tr {
+  transition: 300ms ease;
+}
+
+.table td {
+  vertical-align: middle;
+}
+.table th,
+.table td {
+  padding: 5px 10px;
+}
+
+.table th {
+  height: 50px;
+  border: 1px solid rgb(79, 66, 141);
+  vertical-align: middle;
+}
+
+.table td {
+  border: 1px solid rgba(255, 255, 255, 0.329);
+  height: 40px;
+}
+
+.table tr:nth-of-type(2n + 1) td {
+  background-color: rgba(255, 255, 255, 0.281);
+}
+
+.table tr:hover {
+  background-color: rgba(2, 34, 141, 0.185);
+}
+
+.table tr > td:last-child {
+  text-align: center;
+}
+
+.resultados hr {
+  border-bottom: 1px solid var(--fondo);
 }
