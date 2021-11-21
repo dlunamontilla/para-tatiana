@@ -51,7 +51,7 @@ const guardarCitas = (selectorForm) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 saveFormData("citas", getFormData(form));
-                pintarDatos("#tabla-citas");
+                pintarDatos("#table-container");
                 swal.fire("Agenda guardada!", "", "success");
             } else if (result.isDenied) {
                 swal.fire("Changes are not saved", "", "info");
